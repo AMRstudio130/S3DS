@@ -1,0 +1,87 @@
+Polynomial Addition DS
+#include <stdio.h>
+
+#define MAX_TERMS 100
+
+// Define structure for a polynomial term
+struct Term {
+    int coeff;
+    int exp;
+};
+
+// Function to add two polynomials
+void addPolynomials(struct Term poly1[], int n1, struct Term poly2[], int n2, struct Term result[], int *resultSize) {
+    int i = 0, j = 0, k = 0;
+
+    while (i < n1 && j < n2) {
+        if (poly1[i].exp > poly2[j].exp) {
+            result[k] = poly1[i];
+            i++;
+        } else if (poly1[i].exp < poly2[j].exp) {
+            result[k] = poly2[j];
+            j++;
+        } else {
+            result[k].coeff = poly1[i].coeff + poly2[j].coeff;
+            result[k].exp = poly1[i].exp;
+            i++;
+            j++;
+        }
+        k++;
+    }
+
+    // Copy remaining terms from poly1
+    while (i < n1) {
+        result[k] = poly1[i];
+        i++;
+        k++;
+    }
+
+    // Copy remaining terms from poly2
+    while (j < n2) {
+        result[k] = poly2[j];
+        j++;
+        k++;
+    }
+
+    *resultSize = k;
+}
+
+// Function to display a polynomial
+void displayPolynomial(struct Term poly[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("%dx^%d", poly[i].coeff, poly[i].exp);
+        if (i != n - 1)
+            printf(" + ");
+    }
+    printf("\n");
+}
+
+int main() {
+    struct Term poly1[MAX_TERMS], poly2[MAX_TERMS], result[MAX_TERMS];
+    int n1, n2, resultSize;
+
+    // Input first polynomial
+    printf("Enter the number of terms in the first polynomial: ");
+    scanf("%d", &n1);
+    printf("Enter the terms of the first polynomial (coeff exp):\n");
+    for (int i = 0; i < n1; i++) {
+        scanf("%d%d", &poly1[i].coeff, &poly1[i].exp);
+    }
+
+    // Input second polynomial
+    printf("Enter the number of terms in the second polynomial: ");
+    scanf("%d", &n2);
+    printf("Enter the terms of the second polynomial (coeff exp):\n");
+    for (int i = 0; i < n2; i++) {
+        scanf("%d%d", &poly2[i].coeff, &poly2[i].exp);
+    }
+
+    // Add the two polynomials
+    addPolynomials(poly1, n1, poly2, n2, result, &resultSize);
+
+    // Display the result
+    printf("The resultant polynomial after addition is:\n");
+    displayPolynomial(result, resultSize);
+
+    return 0;
+}
